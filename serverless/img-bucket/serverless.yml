@@ -1,0 +1,103 @@
+# https://github.com/AnomalyInnovations/serverless-stack-demo-mono-api
+
+service: webp-create--bucket
+
+custom:
+    get-firebase-token-service-name: webp-create--get-firebase-token
+    bucket-name: ${self:provider.stage}-${self:service}--img-upload-2
+
+plugins:
+    - serverless-pseudo-parameters
+
+provider:
+    name: aws
+    runtime: nodejs8.10
+
+    stage: dev
+    region: us-west-2
+
+    apiGateway:
+        restApiId:
+            'Fn::ImportValue': ${self:provider.stage}-${self:custom.get-firebase-token-service-name}-ApiGatewayRestApiId
+        restApiRootResourceId:
+            'Fn::ImportValue': ${self:provider.stage}-${self:custom.get-firebase-token-service-name}-ApiGatewayRestApiRootResourceId
+
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - s3:ListBucket
+              - s3:GetObject
+              - s3:PutObject
+              - s3:PutObjectAcl
+              - s3:PutObjectVersionAcl
+          Resource:
+              - arn:aws:s3:::${self:custom.bucket-name}/*
+
+layers:
+    WebpCreateVendorImagemin:
+        path: ../lambda-layer--vendor--imagemin--aws
+        compatibleRuntimes:
+            - nodejs8.10
+        licenseInfo: GPLv3
+        allowedAccounts:
+            - '*'
+
+functions:
+    ResizeImg:
+        handler: resizeImg.handler
+        timeout: 20
+        memorySize: 2048
+        layers:
+            - { Ref: WebpCreateVendorImageminLambdaLayer }
+        environment:
+            BUCKET: ${self:custom.bucket-name}
+
+    ListImages:
+        handler: listImages.handler
+        events:
+            - http:
+                  path: images
+                  method: get
+                  cors: true
+        environment:
+            BUCKET: ${self:custom.bucket-name}
+
+resources:
+    Resources:
+        ImageUploadBucket:
+            Type: AWS::S3::Bucket
+            # DeletionPolicy: Retain
+            DependsOn: ResizeImgLambdaFunction
+            Properties:
+                AccessControl: PublicRead
+                BucketName: ${self:custom.bucket-name}
+                NotificationConfiguration:
+                    LambdaConfigurations:
+                        - Function: !GetAtt ResizeImgLambdaFunction.Arn
+                          Event: s3:ObjectCreated:*
+                          Filter:
+                              S3Key:
+                                  Rules:
+                                      - Name: prefix
+                                        Value: src
+                CorsConfiguration:
+                    CorsRules:
+                        - AllowedOrigins:
+                              - '*'
+                          AllowedHeaders:
+                              - '*'
+                          AllowedMethods:
+                              - GET
+                              - PUT
+                              - POST
+                              - DELETE
+                              - HEAD
+                          MaxAge: 3000
+
+        S3LambdaPermission:
+            Type: AWS::Lambda::Permission
+            Properties:
+                Action: lambda:invokeFunction
+                SourceAccount: !Ref 'AWS::AccountId'
+                FunctionName: !GetAtt ResizeImgLambdaFunction.Arn
+                Principal: s3.amazonaws.com

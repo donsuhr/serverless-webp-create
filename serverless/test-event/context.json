@@ -1,0 +1,11 @@
+{
+    "callbackWaitsForEmptyEventLoop": true,
+    "logGroupName": "/aws/lambda/queuev7-GetDefaultQueueStack-VLOIUHCA5RL6GetDefaultQueueFn",
+    "logStreamName": "2019/01/23/[$LATEST]cc6c8f2f304e4d5c83e783ca3639f4de",
+    "functionName": "queuev7-GetDefaultQueueStack-VLOIUHCA5RL6GetDefaultQueueFn",
+    "memoryLimitInMB": "128",
+    "functionVersion": "$LATEST",
+    "invokeid": "75a13fe6-b9c7-4262-88ac-eb3276ab92c7",
+    "awsRequestId": "75a13fe6-b9c7-4262-88ac-eb3276ab92c7",
+    "invokedFunctionArn": "arn:aws:lambda:us-west-2:502185388942:function:queuev7-GetDefaultQueueStack-VLOIUHCA5RL6GetDefaultQueueFn"
+}

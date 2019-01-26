@@ -1,0 +1,50 @@
+# aws kms encrypt --key-id alias/dskey --output text --plaintext fileb://video-transcoder-776cd-9964a6a1cc5d.json | base64 --decode > video-transcoder-776cd-9964a6a1cc5d.encrypted.json
+
+service: webp-create--get-firebase-token
+
+provider:
+    name: aws
+    runtime: nodejs8.10
+
+    stage: dev
+    region: us-west-2
+
+layers:
+    WebpCreateVendorJwt:
+        path: ../lambda-layer--vendor--jwt
+        compatibleRuntimes:
+            - nodejs8.10
+        licenseInfo: GPLv3
+        allowedAccounts:
+            - '*'
+
+functions:
+    getFirebaseToken:
+        handler: index.handler
+        layers:
+            - { Ref: WebpCreateVendorJwtLambdaLayer }
+        events:
+            - http:
+                  path: firebaseToken
+                  method: get
+                  cors: true
+        environment:
+            AUTH0_DOMAIN: cmc.auth0.com
+            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
+            DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
+
+resources:
+    Outputs:
+        ApiGatewayRestApiId:
+            Value:
+                Ref: ApiGatewayRestApi
+            Export:
+                Name: ${self:provider.stage}-${self:service}-ApiGatewayRestApiId
+
+        ApiGatewayRestApiRootResourceId:
+            Value:
+                Fn::GetAtt:
+                    - ApiGatewayRestApi
+                    - RootResourceId
+            Export:
+                Name: ${self:provider.stage}-${self:service}-ApiGatewayRestApiRootResourceId
