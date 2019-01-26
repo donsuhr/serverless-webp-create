@@ -1,0 +1,14 @@
+.env*
+.eslintcache
+.idea
+.tmp
+dist
+node_modules
+npm-debug.log*
+stats.json
+yarn-error.log
+.cache
+wip.txt
+*.packaged.yml
+coverage
+serverless/test-img-dest
