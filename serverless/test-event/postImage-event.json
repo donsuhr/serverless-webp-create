@@ -1,0 +1,133 @@
+{
+    "resource": "/images",
+    "path": "/images",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9,pt;q=0.8",
+        "cache-control": "no-cache",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "US",
+        "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryPMSfPJzgjY6j7BnP",
+        "Host": "z8hojechm0.execute-api.us-west-2.amazonaws.com",
+        "origin": "https://cmc.suhrthing.com:9001",
+        "pragma": "no-cache",
+        "Referer": "https://cmc.suhrthing.com:9001/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+        "Via": "2.0 27a783405519f49942e72a6ed75f783f.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "pvAjogYXneCGW8K3hmBkiYQzy5MY1gxe5G3eQdj1ZClhbEoNNL7vDA==",
+        "X-Amzn-Trace-Id": "Root=1-5c4fe4ba-23dfa0155a402b1f0613895b",
+        "X-Forwarded-For": "73.37.10.39, 52.46.16.47",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https",
+        "debug": ""
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "gzip, deflate, br"
+        ],
+        "Accept-Language": [
+            "en-US,en;q=0.9,pt;q=0.8"
+        ],
+        "cache-control": [
+            "no-cache"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "US"
+        ],
+        "content-type": [
+            "multipart/form-data; boundary=----WebKitFormBoundaryPMSfPJzgjY6j7BnP"
+        ],
+        "Host": [
+            "z8hojechm0.execute-api.us-west-2.amazonaws.com"
+        ],
+        "origin": [
+            "https://cmc.suhrthing.com:9001"
+        ],
+        "pragma": [
+            "no-cache"
+        ],
+        "Referer": [
+            "https://cmc.suhrthing.com:9001/"
+        ],
+        "User-Agent": [
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+        ],
+        "Via": [
+            "2.0 27a783405519f49942e72a6ed75f783f.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "pvAjogYXneCGW8K3hmBkiYQzy5MY1gxe5G3eQdj1ZClhbEoNNL7vDA=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5c4fe4ba-23dfa0155a402b1f0613895b"
+        ],
+        "X-Forwarded-For": [
+            "73.37.10.39, 52.46.16.47"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "3t27lj",
+        "resourcePath": "/images",
+        "httpMethod": "POST",
+        "extendedRequestId": "UQCtLGm0vHcF7tw=",
+        "requestTime": "29/Jan/2019:05:29:30 +0000",
+        "path": "/dev/images",
+        "accountId": "502185388942",
+        "protocol": "HTTP/1.1",
+        "stage": "dev",
+        "domainPrefix": "z8hojechm0",
+        "requestTimeEpoch": 1548739770778,
+        "requestId": "da5f4faf-2386-11e9-b8e8-bb987311f5ab",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "73.37.10.39",
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+            "user": null
+        },
+        "domainName": "z8hojechm0.execute-api.us-west-2.amazonaws.com",
+        "apiId": "z8hojechm0"
+    },
+    "body": "LS0tLS0tV2ViS2l0Rm9ybUJvdW5kYXJ5UE1TZlBKemdqWTZqN0JuUA0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJ1cGxvYWQiOyBmaWxlbmFtZT0iZV9sb2dpbi5naWYiDQpDb250ZW50LVR5cGU6IGltYWdlL2dpZg0KDQpHSUY4OWFCABkAxAAAeKIvs8uK9/rzfqY41eK/mrljxNekor9wiq5L5u7Z////ia5Ju9CXzdyy3ujMkbRW7/Tmq8V93OfJ+vz4psJ2gKc7eqMx+fv1jK9NgKg8vdGXAAAAAAAAAAAAAAAAAAAAIfkEAAcA/wAsAAAAAEIAGQAABf+gIo6K0FCIBaxs675wDCNUI5D4ODGV7P/AWIUxyY0SmKByCcQkjJIBc0p1DSS4hLTKpQ6eokmyS2ZiigpGUFMoAxaOBZdR6gEVGvdD8eBWTEp4bm4ngXkvEQQODX0sCw2LGhoRbxpyCxoZAQ4OAUEohi8GAhEFGgoHKwsmBRECDm0FCrEKCWyuBkApoS17jQAaECsBCSwGDiuytIcAAQKDLIItwS0Ls8DIKxrZygDdyQrQK9Is2y7X3QsJud7o1+BBCLzl2dFtzSIC7O209+26FOatiKAgA4sDCuQASOCPRbdv/37UCNSggMUCciA0WJEhAQEWAghI0tDo4buIPmxg2PmRI8+DBBAcvDII4IAtSaNSmfQn68efNGUeYGSRQUDDY27oKBAjrh3NFQ0+kjlzZAu0BA4OFDhAQMCvKl9wRBGniVMnhVyuGEHSFJoTI2F4tO0yBA3cfCd2zQVow0gIADsNCi0tLS0tLVdlYktpdEZvcm1Cb3VuZGFyeVBNU2ZQSnpnalk2ajdCblAtLQ0K",
+    "isBase64Encoded": true
+}

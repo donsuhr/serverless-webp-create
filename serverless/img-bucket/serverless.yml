@@ -5,9 +5,14 @@ service: webp-create--bucket
 custom:
     get-firebase-token-service-name: webp-create--get-firebase-token
     bucket-name: ${self:provider.stage}-${self:service}--img-upload-2
+    jwtVenderLayer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:layer:WebpCreateVendorJwt:4
+    apigwBinary:
+        types:
+            - 'multipart/form-data'
 
 plugins:
     - serverless-pseudo-parameters
+    - serverless-apigw-binary
 
 provider:
     name: aws
@@ -30,6 +35,7 @@ provider:
               - s3:PutObject
               - s3:PutObjectAcl
               - s3:PutObjectVersionAcl
+              - s3:DeleteObject
           Resource:
               - arn:aws:s3:::${self:custom.bucket-name}/*
 
@@ -43,17 +49,53 @@ layers:
             - '*'
 
 functions:
-    ResizeImg:
-        handler: resizeImg.handler
-        timeout: 20
-        memorySize: 2048
+    DeleteImage:
+        handler: deleteImage.handler
+        timeout: 3
+        memorySize: 128
         layers:
-            - { Ref: WebpCreateVendorImageminLambdaLayer }
+            - ${self:custom.jwtVenderLayer}
+        events:
+            - http:
+                  path: images/{key}
+                  method: delete
+                  request:
+                      parameters:
+                          paths:
+                              key: true
+                  cors:
+                      origin: '*'
+                      headers:
+                          - Content-Type
+                          - X-Amz-Date
+                          - Authorization
+                          - X-Api-Key
+                          - X-Amz-Security-Token
+                          - X-Amz-User-Agent
+                          - Cache-Control
+                          - Pragma
+                          - Debug
         environment:
             BUCKET: ${self:custom.bucket-name}
+            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
+            DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
+
+    ResizeImage:
+        handler: resizeImage.handler
+        timeout: 15
+        memorySize: 1024
+        layers:
+            - { Ref: WebpCreateVendorImageminLambdaLayer }
+            - ${self:custom.jwtVenderLayer}
+        environment:
+            BUCKET: ${self:custom.bucket-name}
+            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
+            DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
 
     ListImages:
         handler: listImages.handler
+        timeout: 3
+        memorySize: 128
         events:
             - http:
                   path: images
@@ -62,18 +104,41 @@ functions:
         environment:
             BUCKET: ${self:custom.bucket-name}
 
+    PostImage:
+        handler: postImage.handler
+        events:
+            - http:
+                  path: images
+                  method: post
+                  cors:
+                      origin: '*'
+                      headers:
+                          - Content-Type
+                          - X-Amz-Date
+                          - Authorization
+                          - X-Api-Key
+                          - X-Amz-Security-Token
+                          - X-Amz-User-Agent
+                          - Cache-Control
+                          - Pragma
+                          - Debug
+        layers:
+            - ${self:custom.jwtVenderLayer}
+        environment:
+            BUCKET: ${self:custom.bucket-name}
+
 resources:
     Resources:
         ImageUploadBucket:
             Type: AWS::S3::Bucket
             # DeletionPolicy: Retain
-            DependsOn: ResizeImgLambdaFunction
+            DependsOn: ResizeImageLambdaFunction
             Properties:
                 AccessControl: PublicRead
                 BucketName: ${self:custom.bucket-name}
                 NotificationConfiguration:
                     LambdaConfigurations:
-                        - Function: !GetAtt ResizeImgLambdaFunction.Arn
+                        - Function: !GetAtt ResizeImageLambdaFunction.Arn
                           Event: s3:ObjectCreated:*
                           Filter:
                               S3Key:
@@ -99,5 +164,5 @@ resources:
             Properties:
                 Action: lambda:invokeFunction
                 SourceAccount: !Ref 'AWS::AccountId'
-                FunctionName: !GetAtt ResizeImgLambdaFunction.Arn
+                FunctionName: !GetAtt ResizeImageLambdaFunction.Arn
                 Principal: s3.amazonaws.com

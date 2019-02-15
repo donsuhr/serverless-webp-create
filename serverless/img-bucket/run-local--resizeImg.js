@@ -9,6 +9,6 @@ const myConfig = new AWS.Config();
 myConfig.update({ region: 'us-west-2' });
 
 const event = require('../test-event/resizeImg-event');
-const { handler } = require('./resizeImg');
+const { handler } = require('./resizeImage');
 
 handler(event, {});

@@ -1,0 +1,152 @@
+{
+    "resource": "/images/{key}",
+    "path": "/images/src%2F800px-Pizigani_1367_Chart_1MB.jpg",
+    "httpMethod": "DELETE",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9,pt;q=0.8",
+        "cache-control": "no-cache",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "US",
+        "debug": "deleteImage:upload deleteImage:event",
+        "Host": "z8hojechm0.execute-api.us-west-2.amazonaws.com",
+        "origin": "https://cmc.suhrthing.com:9001",
+        "pragma": "no-cache",
+        "Referer": "https://cmc.suhrthing.com:9001/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+        "Via": "2.0 a2a7227d0a99f50bffb8ba79de64ab0f.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "N4cH23Vtnnuf6Tv3ith47_jwlGvkq1Vt0-Cj8XNTjMTlzvU05mYh7g==",
+        "X-Amzn-Trace-Id": "Root=1-5c538814-89a7afa0a88b500abb51456c",
+        "X-Forwarded-For": "73.37.10.39, 52.46.17.63",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https",
+        "accept": "*/*",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9,pt;q=0.8",
+        "cloudfront-forwarded-proto": "https",
+        "cloudfront-is-desktop-viewer": "true",
+        "cloudfront-is-mobile-viewer": "false",
+        "cloudfront-is-smarttv-viewer": "false",
+        "cloudfront-is-tablet-viewer": "false",
+        "cloudfront-viewer-country": "US",
+        "host": "z8hojechm0.execute-api.us-west-2.amazonaws.com",
+        "referer": "https://cmc.suhrthing.com:9001/",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+        "via": "2.0 a2a7227d0a99f50bffb8ba79de64ab0f.cloudfront.net (CloudFront)",
+        "x-amz-cf-id": "N4cH23Vtnnuf6Tv3ith47_jwlGvkq1Vt0-Cj8XNTjMTlzvU05mYh7g==",
+        "x-amzn-trace-id": "Root=1-5c538814-89a7afa0a88b500abb51456c",
+        "x-forwarded-for": "73.37.10.39, 52.46.17.63",
+        "x-forwarded-port": "443",
+        "x-forwarded-proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "gzip, deflate, br"
+        ],
+        "Accept-Language": [
+            "en-US,en;q=0.9,pt;q=0.8"
+        ],
+        "cache-control": [
+            "no-cache"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "US"
+        ],
+        "debug": [
+            "deleteImage:upload deleteImage:event"
+        ],
+        "Host": [
+            "z8hojechm0.execute-api.us-west-2.amazonaws.com"
+        ],
+        "origin": [
+            "https://cmc.suhrthing.com:9001"
+        ],
+        "pragma": [
+            "no-cache"
+        ],
+        "Referer": [
+            "https://cmc.suhrthing.com:9001/"
+        ],
+        "User-Agent": [
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+        ],
+        "Via": [
+            "2.0 a2a7227d0a99f50bffb8ba79de64ab0f.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "N4cH23Vtnnuf6Tv3ith47_jwlGvkq1Vt0-Cj8XNTjMTlzvU05mYh7g=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5c538814-89a7afa0a88b500abb51456c"
+        ],
+        "X-Forwarded-For": [
+            "73.37.10.39, 52.46.17.63"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": {
+        "key": "src%2F800px-Pizigani_1367_Chart_1MB.jpg"
+    },
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "1e373s",
+        "resourcePath": "/images/{key}",
+        "httpMethod": "DELETE",
+        "extendedRequestId": "UZIzJFk-PHcFujw=",
+        "requestTime": "31/Jan/2019:23:43:16 +0000",
+        "path": "/dev/images/src%2F800px-Pizigani_1367_Chart_1MB.jpg",
+        "accountId": "502185388942",
+        "protocol": "HTTP/1.1",
+        "stage": "dev",
+        "domainPrefix": "z8hojechm0",
+        "requestTimeEpoch": 1548978196114,
+        "requestId": "faf26747-25b1-11e9-8c3a-05692524f3df",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "73.37.10.39",
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+            "user": null
+        },
+        "domainName": "z8hojechm0.execute-api.us-west-2.amazonaws.com",
+        "apiId": "z8hojechm0"
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

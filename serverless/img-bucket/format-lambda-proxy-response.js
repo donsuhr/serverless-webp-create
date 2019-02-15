@@ -5,7 +5,7 @@ const headers = {
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Methods': 'GET,OPTIONS',
     'Access-Control-Allow-Headers':
-        'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-Control,Pragma',
+        'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-Control,Pragma,Debug',
 };
 
 module.exports.returnError = function returnError(requestId, err) {
