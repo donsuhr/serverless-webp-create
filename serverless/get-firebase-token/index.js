@@ -7,8 +7,20 @@ const fs = require('fs');
 const path = require('path');
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const firebase = require('firebase-admin'); // eslint-disable-line import/no-unresolved
+const debug = require('debug'); // eslint-disable-line import/no-extraneous-dependencies
 const { verifyToken } = require('./verify-jwt');
 const { returnError, returnSuccess } = require('./format-lambda-proxy-response');
+
+function isLocalTest() {
+    return process.env.NODE_PATH.includes('lambda-layer');
+}
+
+const debugEvent = debug('getFirbaseToken:event');
+
+if (!isLocalTest()) {
+    // eslint-disable-line no-use-before-define
+    debug.log = console.log.bind(console); // eslint-disable-line no-console
+}
 
 let firebaseApp;
 
@@ -53,8 +65,8 @@ function decryptServiceAccount() {
 }
 
 module.exports.handler = async (event, context) => {
-    console.log('Auth-Jwt Received event: ', JSON.stringify(event, null, 2));
-    console.log('Auth Jwt Context', JSON.stringify(context, null, 2));
+    debugEvent('Event: ', JSON.stringify(event, null, 2));
+    debugEvent('Context', JSON.stringify(context, null, 2));
 
     context.callbackWaitsForEmptyEventLoop = false;
     try {
