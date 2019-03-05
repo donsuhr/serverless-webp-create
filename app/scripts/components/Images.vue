@@ -57,14 +57,11 @@ export default {
             if (item.uploading) {
                 return Uploading;
             }
-            if (item.progress === 1) {
-                if (item.logStoreItem.transcoding) {
-                    return Processing;
-                }
-                if (item.processPending) {
-                    return ProcessingPending;
-                }
-                // return 'processed';
+            if (item.logStoreItem && item.logStoreItem.transcoding) {
+                return Processing;
+            }
+            if (item.processPending) {
+                return ProcessingPending;
             }
             return Base;
         },

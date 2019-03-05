@@ -12,6 +12,9 @@
         <div class="images__list-item__info">
             <div v-if="logStoreItem">
                 <p>updatedAt: {{ formatDate(logStoreItem.updatedAt) }}</p>
+                <p v-if="logStoreItem.error">
+                    {{ logStoreItem.error }}
+                </p>
             </div>
         </div>
         <div class="images__img-item"
