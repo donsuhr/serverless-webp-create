@@ -17,8 +17,10 @@
                 </p>
             </div>
         </div>
-        <div class="images__img-item"
-             @click.prevent="onOptClick">
+        <div
+            class="images__img-item"
+            @click.prevent="onOptClick"
+        >
             <p class="images__img-item__title">
                 Optimised: ({{ formatBytes(optimised.Size) }})
             </p>
@@ -141,24 +143,18 @@ export default {
             this.$store.dispatch('images/deleteItem', key);
         },
         onWebpClick() {
-            this.$store.dispatch(
-                'ui/updateZoom',
-                {
-                    beforeUrl: this.generateImgUrl(this.s3Key),
-                    compareImgUrl: this.generateImgUrl(this.webp.Key),
-                    afterLabel: 'WebP',
-                },
-            );
+            this.$store.dispatch('ui/updateZoom', {
+                beforeUrl: this.generateImgUrl(this.s3Key),
+                compareImgUrl: this.generateImgUrl(this.webp.Key),
+                afterLabel: 'WebP',
+            });
         },
         onOptClick() {
-            this.$store.dispatch(
-                'ui/updateZoom',
-                {
-                    beforeUrl: this.generateImgUrl(this.s3Key),
-                    compareImgUrl: this.generateImgUrl(this.optimised.Key),
-                    afterLabel: 'Optimised',
-                },
-            );
+            this.$store.dispatch('ui/updateZoom', {
+                beforeUrl: this.generateImgUrl(this.s3Key),
+                compareImgUrl: this.generateImgUrl(this.optimised.Key),
+                afterLabel: 'Optimised',
+            });
         },
     },
 };
