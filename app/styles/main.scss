@@ -42,3 +42,65 @@ p {
     display: block;
     font-family: monospace;
 }
+
+.images__img-item {
+    position: relative;
+}
+
+.error {
+    color: red;
+}
+
+.images__form-wrapper {
+    grid-column: 1/3;
+}
+
+.images__img-form__field-info {
+    font-size: 12px;
+}
+
+.images__img-form__label {
+    font-weight: bold;
+    display: inline-block;
+    &:after {
+        content: ': '
+    }
+}
+
+.images__img-form__input {
+    display: inline-block;
+}
+
+.images__img-zoom-btn__img {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.twentytwenty-container {
+    grid-column: 1/3;
+    grid-row: span 2;
+}
+
+
+.zoomer {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 2em;
+    padding: 2em;
+    border: 1px solid rgba(50, 50, 50, 0.5);
+    background-color: rgba(150, 150, 150, 0.5);
+    box-shadow: 10px 10px 26px -9px rgba(0,0,0,0.58);
+}
+
+.zoomer__close-btn {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}

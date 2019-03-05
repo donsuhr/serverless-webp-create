@@ -8,6 +8,7 @@
             Logged In
             <Log />
             <Images />
+            <Zoomer />
         </div>
         <p>{{ loading }}</p>
         <p>{{ isAuth }}</p>
@@ -16,12 +17,14 @@
 <script>
 import Log from '../components/Log';
 import Images from '../components/Images';
+import Zoomer from '../components/Zoomer';
 
 export default {
     name: 'Home',
     components: {
         Log,
         Images,
+        Zoomer,
     },
     computed: {
         authenticated() {

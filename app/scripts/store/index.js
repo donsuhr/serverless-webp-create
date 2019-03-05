@@ -6,6 +6,7 @@ import {
     addListeners as addLogListeners,
 } from './log-store';
 import { create as createImagesStore } from './s3-list-store';
+import { create as createUiStore } from './ui-store';
 
 Vue.use(Vuex);
 
@@ -16,8 +17,10 @@ export default function createStore({ authService, fbService }) {
     const authenticatedStore = createAuthenticatedStore({ authService });
     const logStore = createLogStore({ authService, fbService, imagesStoreKey });
     const imagesStore = createImagesStore();
+    const uiStore = createUiStore();
     const store = new Vuex.Store({
         modules: {
+            ui: uiStore,
             authenticated: authenticatedStore,
             [logStoreKey]: logStore,
             [imagesStoreKey]: imagesStore,

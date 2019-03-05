@@ -14,7 +14,8 @@
                 <p>updatedAt: {{ formatDate(logStoreItem.updatedAt) }}</p>
             </div>
         </div>
-        <div class="images__img-item">
+        <div class="images__img-item"
+             @click.prevent="onOptClick">
             <p class="images__img-item__title">
                 Optimised: ({{ formatBytes(optimised.Size) }})
             </p>
@@ -22,9 +23,16 @@
                 class="images__list-item__img--opt"
                 :src="generateImgUrl(optimised.Key)"
             >
+            <img
+                class="images__img-zoom-btn__img"
+                src="img/mag.svg"
+            >
         </div>
 
-        <div class="images__img-item">
+        <div
+            class="images__img-item"
+            @click.prevent="onWebpClick"
+        >
             <p class="images__img-item__title">
                 Webp: ({{ formatBytes(webp.Size) }})
             </p>
@@ -32,6 +40,11 @@
                 class="images__list-item__img--webp"
                 :src="generateImgUrl(webp.Key)"
             >
+            <img
+                class="images__img-zoom-btn__img"
+                src="img/mag.svg"
+            >
+        </div>
         </div>
         <button
             type="button"
@@ -41,6 +54,7 @@
         </button>
     </div>
 </template>
+
 <script>
 import config from 'config';
 import { format } from 'date-fns';
@@ -108,6 +122,26 @@ export default {
         },
         onDeleteClicked(key) {
             this.$store.dispatch('images/deleteItem', key);
+        },
+        onWebpClick() {
+            this.$store.dispatch(
+                'ui/updateZoom',
+                {
+                    beforeUrl: this.generateImgUrl(this.s3Key),
+                    compareImgUrl: this.generateImgUrl(this.webp.Key),
+                    afterLabel: 'WebP',
+                },
+            );
+        },
+        onOptClick() {
+            this.$store.dispatch(
+                'ui/updateZoom',
+                {
+                    beforeUrl: this.generateImgUrl(this.s3Key),
+                    compareImgUrl: this.generateImgUrl(this.optimised.Key),
+                    afterLabel: 'Optimised',
+                },
+            );
         },
     },
 };
