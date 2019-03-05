@@ -142,6 +142,27 @@ function create() {
                     ];
                 }
             },
+            updatingItem(state, { key, data }) {
+                const index = state.srcItems.findIndex(x => x.Key === key);
+                if (index !== -1) {
+                    const Metadata = Object.keys(data).reduce((acc, x) => {
+                        acc[x] = String(data[x]);
+                        return acc;
+                    }, {});
+                    const newItem = {
+                        ...state.srcItems[index],
+                        processPending: true,
+                        head: {
+                            Metadata,
+                        },
+                    };
+                    state.srcItems = [
+                        ...state.srcItems.slice(0, index),
+                        newItem,
+                        ...state.srcItems.slice(index + 1),
+                    ];
+                }
+            },
         },
         actions: {
             async loadItems({ commit, rootGetters }) {
@@ -250,6 +271,23 @@ function create() {
                     .then(checkStatus)
                     .then(parseJSON);
                 context.commit('deletedItem', key);
+                context.commit('setLoading', false);
+            },
+            async updateItem(context, { key, data }) {
+                context.commit('setLoading', true);
+                context.commit('updatingItem', { key, data });
+                const url = `${
+                    config.AWS.apiGatewayUrl
+                }/images/${encodeURIComponent(key)}`;
+                await fetch(url, {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    headers: {
+                        Debug: 'updateImageMeta:event updateImageMeta:update',
+                    },
+                })
+                    .then(checkStatus)
+                    .then(parseJSON);
                 context.commit('setLoading', false);
             },
         },

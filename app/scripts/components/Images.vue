@@ -82,7 +82,11 @@ export default {
                 size: 'Size',
             };
             return Object.keys(mode.props).reduce((acc, x) => {
-                acc[x] = item[transform[x]];
+                if (x === 'metadata' && item.head) {
+                    acc.metadata = item.head.Metadata;
+                } else {
+                    acc[x] = item[transform[x]];
+                }
                 return acc;
             }, {});
         },

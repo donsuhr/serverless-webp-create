@@ -50,7 +50,35 @@ const s3 = new AWS.S3();
 
 let firebaseApp;
 
-function writeToFirebase(key, transcoding, fileSizes) {
+function getKeyFromEvent(event) {
+    return decodeURIComponent(
+        event.Records[0].s3.object.key.replace(/\+/g, ' '),
+    );
+}
+
+function processMetadata(metaData) {
+    const ret = {
+        ...metaData,
+    };
+    if (ret.strip) {
+        ret.strip = ret.strip === 'true';
+    }
+    if (ret.speed) {
+        ret.speed = parseInt(ret.speed, 10);
+    }
+    return ret;
+}
+
+function getS3ObjectHead(Key) {
+    const params = {
+        Bucket: process.env.BUCKET,
+        Key,
+    };
+
+    return s3.headObject(params).promise();
+}
+
+function writeToFirebase(key, transcoding, valuesObj) {
     const fbKey = key.replace(/[/.]/g, '__');
     const updatedAt = new Date().toISOString();
     return firebaseApp
@@ -62,7 +90,7 @@ function writeToFirebase(key, transcoding, fileSizes) {
             Key: key,
             transcoding,
             updatedAt,
-            ...fileSizes,
+            ...valuesObj,
         })
         .then(() => {
             debugUpload('set fb key', key, '(', fbKey, ')', transcoding);
@@ -114,13 +142,13 @@ function writeToS3(key, buffer) {
     return manager.promise();
 }
 
-function processImagemin(buffer) {
+function processImagemin(buffer, metadata) {
     return imagemin.buffer(buffer, {
         plugins: [
-            imageminPngquant(),
-            imageminGifsicle(),
-            imageminJpegtran(),
-            imageminSvgo(),
+            imageminPngquant(metadata),
+            imageminGifsicle(metadata),
+            imageminJpegtran(metadata),
+            imageminSvgo(metadata),
         ],
     });
 }
@@ -156,13 +184,14 @@ async function createWebP(key, buffer) {
 }
 
 async function processEvent(event, context) {
-    const key = decodeURIComponent(
-        event.Records[0].s3.object.key.replace(/\+/g, ' '),
-    );
+    const key = getKeyFromEvent(event);
     await writeToFirebase(key, true);
+    const { Metadata } = await getS3ObjectHead(key);
+    const metadata = processMetadata(Metadata);
+    debugUpload('metadata:', metadata);
 
     const data = await getImageBuffer(key);
-    const processed = await processImagemin(data.Body);
+    const processed = await processImagemin(data.Body, metadata);
     const processedFileWriteKey = path.resolve(
         __dirname,
         key.replace('src/', '../test-img-dest/'),
@@ -199,10 +228,11 @@ async function processEvent(event, context) {
         processedFileUpload,
         webpFileWrite,
         webpFileUpload,
-    ]).then(() => {
-        const optimisedFileSize = processed.byteLength;
-        writeToFirebase(key, false, { webpFileSize, optimisedFileSize });
-    });
+    ])
+        .then(() => {
+            const optimisedFileSize = processed.byteLength;
+            writeToFirebase(key, false, { webpFileSize, optimisedFileSize });
+        });
 }
 
 function decryptServiceAccount() {
@@ -236,5 +266,11 @@ module.exports.handler = async (event, context) => {
     if (!firebaseApp) {
         await decryptServiceAccount();
     }
-    return processEvent(event, context);
+    try {
+        return await processEvent(event, context);
+    } catch (error) {
+        const key = getKeyFromEvent(event);
+        writeToFirebase(key, false, { error: error.message });
+        return error;
+    }
 };

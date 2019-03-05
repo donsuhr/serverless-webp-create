@@ -45,13 +45,18 @@
                 src="img/mag.svg"
             >
         </div>
+        <div class="images__form-wrapper">
+            <MetaDataForm
+                :s3-key="s3Key"
+                v-bind="metadata"
+            />
+            <button
+                type="button"
+                @click.prevent="onDeleteClicked(s3Key)"
+            >
+                Delete Image
+            </button>
         </div>
-        <button
-            type="button"
-            @click.prevent="onDeleteClicked(s3Key)"
-        >
-            Delete
-        </button>
     </div>
 </template>
 
@@ -59,9 +64,13 @@
 import config from 'config';
 import { format } from 'date-fns';
 import prettyBytes from 'pretty-bytes';
+import MetaDataForm from '../MetaDataForm';
 
 export default {
     name: 'Base',
+    components: {
+        MetaDataForm,
+    },
     props: {
         size: {
             type: Number,
@@ -95,6 +104,11 @@ export default {
         didProcess: {
             type: Boolean,
             default: false,
+        },
+        metadata: {
+            type: Object,
+            required: false,
+            default: () => ({}),
         },
     },
     created() {
