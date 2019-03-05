@@ -51,7 +51,7 @@ layers:
 functions:
     DeleteImage:
         handler: deleteImage.handler
-        timeout: 3
+        timeout: 8
         memorySize: 128
         layers:
             - ${self:custom.jwtVenderLayer}

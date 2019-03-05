@@ -5,6 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { performance } = require('perf_hooks'); // eslint-disable-line import/no-unresolved
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 const firebase = require('firebase-admin'); // eslint-disable-line import/no-unresolved
 const debug = require('debug'); // eslint-disable-line import/no-extraneous-dependencies
@@ -18,7 +19,7 @@ function isLocalTest() {
 }
 
 const debugEvent = debug('deleteImage:event');
-const debugDelete = debug('deleteImage:upload');
+const debugDelete = debug('deleteImage:delete');
 if (!isLocalTest()) {
     // eslint-disable-line no-use-before-define
     debug.log = console.log.bind(console); // eslint-disable-line no-console
@@ -28,6 +29,7 @@ let firebaseApp;
 const s3 = new AWS.S3();
 
 function deleteS3Objects(Key) {
+    const t0 = performance.now();
     const optKey = Key.replace('src/', 'optimised/');
     const params = {
         Delete: {
@@ -48,11 +50,19 @@ function deleteS3Objects(Key) {
         const webpKey = optKey.replace(ext, '.webp');
         params.Delete.Objects.push({ Key: webpKey });
     }
-    return s3.deleteObjects(params).promise();
+    debugDelete('start delete s3 obj', JSON.stringify(params.Delete.Objects, null, 2));
+    const ret = s3.deleteObjects(params).promise();
+    ret.then(() => {
+        const t1 = performance.now();
+        debugDelete('finish delete s3 obj', `${t1 - t0}ms`);
+    });
+    return ret;
 }
 
 function deleteFirebaseRefs(key) {
+    const t0 = performance.now();
     const fbKey = key.replace(/[/.]/g, '__');
+    debugDelete('start delete fb key', key, '(', fbKey, ')');
     return firebaseApp
         .database()
         .ref()
@@ -60,10 +70,12 @@ function deleteFirebaseRefs(key) {
         .child(fbKey)
         .remove()
         .then(() => {
-            debugDelete('delete fb key', key, '(', fbKey, ')');
+            const t1 = performance.now();
+            debugDelete('finish delete fb key', key, '(', fbKey, ')', `${t1 - t0}ms`);
         })
         .catch((e) => {
-            debugDelete('error deleting fb', key, e);
+            const t1 = performance.now();
+            debugDelete('error deleting fb', key, e, `${t1 - t0}ms`);
         });
 }
 
@@ -110,7 +122,7 @@ module.exports.handler = async (event, context) => {
     }
     if (
         event.headers.debug
-        && event.headers.debug.includes('deleteImage:upload')
+        && event.headers.debug.includes('deleteImage:delete')
     ) {
         debugDelete.enabled = true;
     }
