@@ -18,6 +18,20 @@ const defaultItemProps = {
     didProcess: false,
 };
 
+function correctHeaderCase(headObj) {
+    const correctCase = {
+        optimizationlevel: 'optimizationLevel',
+    };
+    return Object.keys(headObj).reduce((acc, x) => {
+        if (Object.hasOwnProperty.call(correctCase, x)) {
+            acc[correctCase[x]] = headObj[x];
+        } else {
+            acc[x] = headObj[x];
+        }
+        return acc;
+    }, {});
+}
+
 function create() {
     return {
         namespaced: true,
@@ -182,6 +196,7 @@ function create() {
                     const optKey = x.Key.replace('src/', 'optimised/');
                     const ext = x.Key.substring(x.Key.lastIndexOf('.'));
                     const webpKey = optKey.replace(ext, '.webp');
+                    x.head.Metadata = correctHeaderCase(x.head.Metadata);
                     return {
                         ...defaultItemProps,
                         ...x,

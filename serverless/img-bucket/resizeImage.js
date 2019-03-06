@@ -50,6 +50,8 @@ const s3 = new AWS.S3();
 
 let firebaseApp;
 
+const webpOptionWhitelist = ['q', 'lossless'];
+
 function getKeyFromEvent(event) {
     return decodeURIComponent(
         event.Records[0].s3.object.key.replace(/\+/g, ' '),
@@ -65,6 +67,22 @@ function processMetadata(metaData) {
     }
     if (ret.speed) {
         ret.speed = parseInt(ret.speed, 10);
+    }
+    if (ret.progressive) {
+        ret.progressive = ret.progressive === 'true';
+    }
+    if (ret.optimizationlevel) { // lowercase L
+        ret.optimizationLevel = parseInt(ret.optimizationlevel, 10);
+        delete ret.optimizationlevel;
+    }
+    if (ret.interlaced) {
+        ret.interlaced = ret.interlaced === 'true';
+    }
+    if (ret.q) {
+        ret.q = parseInt(ret.q, 10);
+    }
+    if (ret.lossless) {
+        ret.lossless = ret.lossless === 'true';
     }
     return ret;
 }
@@ -159,20 +177,36 @@ function promiseFromChildProcess(child) {
             reject(err);
         });
 
-        child.addListener('exit', () => {
+        child.addListener('exit', (x) => {
             resolve();
         });
     });
 }
 
-async function createWebP(key, buffer) {
+async function createWebP(key, buffer, metadata) {
     const ext = path.extname(key).toLowerCase();
+
     if (ext === '.gif') {
         const inFilePath = '/tmp/gif2webp-in.gif';
         const outFilePath = '/tmp/gif2webp-out.webp';
         await fsWriteFile(inFilePath, buffer);
+        const metaDataOptions = Object.keys(metadata).reduce((acc, x) => {
+            if (webpOptionWhitelist.includes(x)) {
+                if (x === 'lossless') {
+                    if (metadata[x]) {
+                        acc.push('-lossy');
+                    }
+                } else {
+                    acc.push(`-${x}`);
+                    acc.push(String(metadata[x]));
+                }
+            }
+            return acc;
+        }, []);
+        const options = [inFilePath, '-o', outFilePath].concat(metaDataOptions);
+        debugUpload('gif2webp:', options);
         await promiseFromChildProcess(
-            execFile(gif2webp, [inFilePath, '-o', outFilePath]),
+            execFile(gif2webp, options),
         );
         return fsReadFile(outFilePath);
     }
@@ -180,6 +214,12 @@ async function createWebP(key, buffer) {
         ? null
         : '/opt/libwebp-1.0.2-linux-x86-64/bin/cwebp';
     const encoder = new CWebp(buffer, cwebpBinDir);
+    if (metadata.q) {
+        encoder.quality(metadata.q);
+    }
+    if (metadata.lossless) {
+        encoder.lossless(metadata.lossless);
+    }
     return encoder.toBuffer();
 }
 
@@ -207,7 +247,7 @@ async function processEvent(event, context) {
         webpFileUpload = Promise.resolve();
         webpFileWrite = Promise.resolve();
     } else {
-        const webp = await createWebP(key, data.Body);
+        const webp = await createWebP(key, data.Body, metadata);
         const webpFileWriteKey = path.resolve(
             __dirname,
             key.replace(ext, '.webp').replace('src/', '../test-img-dest/'),

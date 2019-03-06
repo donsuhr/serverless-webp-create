@@ -23,7 +23,9 @@ if (!isLocalTest()) { // eslint-disable-line no-use-before-define
 const s3 = new AWS.S3();
 
 const paramWhiteList = {
-    png: ['speed', 'strip'],
+    '.png': ['speed', 'strip', 'q', 'lossless'],
+    '.jpg': ['progressive', 'q', 'lossless'],
+    '.gif': ['interlaced', 'optimizationLevel', 'q', 'lossless'],
 };
 
 function getS3ObjectHead(Key) {
