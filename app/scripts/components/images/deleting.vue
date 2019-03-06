@@ -21,7 +21,7 @@ import prettyBytes from 'pretty-bytes';
 import config from 'config';
 
 export default {
-    name: 'Processing',
+    name: 'Deleting',
     props: {
         size: {
             type: Number,
