@@ -13,7 +13,6 @@ function create({ authService, db, imagesStoreKey }) {
                 const index = state.items.findIndex(x => x.Key === data.Key);
                 if (index !== -1) {
                     const newItem = {
-                        ...state.items[index],
                         ...data,
                     };
                     state.items = [
