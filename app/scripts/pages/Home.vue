@@ -1,6 +1,8 @@
 <template>
     <section class="home-page auth-page container">
         <h2>Home</h2>
+        <p>authenticated/loading: {{ loading }}</p>
+        <p>authenticated/isAuth: {{ isAuth }}</p>
         <p v-if="!authenticated">
             Not Logged In
         </p>
@@ -10,8 +12,6 @@
             <Images />
             <Zoomer />
         </div>
-        <p>{{ loading }}</p>
-        <p>{{ isAuth }}</p>
     </section>
 </template>
 <script>
@@ -31,12 +31,10 @@ export default {
             return this.$store.getters['authenticated/isAuth0Auth'];
         },
         loading() {
-            const ret = this.$store.getters['authenticated/loading'];
-            return ret;
+            return this.$store.getters['authenticated/loading'];
         },
         isAuth() {
-            const ret = this.$store.getters['authenticated/isAuth'];
-            return ret;
+            return this.$store.getters['authenticated/isAuth'];
         },
     },
 };

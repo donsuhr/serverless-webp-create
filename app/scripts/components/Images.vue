@@ -5,6 +5,19 @@
         @dragover.prevent="ondragover"
     >
         <h3>Images</h3>
+        images/loading:
+        <div
+            v-if="loading"
+            class="loading"
+        >
+            Loading...
+        </div>
+        <div
+            v-if="!loading"
+            class="loading"
+        >
+            Not Loading...
+        </div>
         <ul class="images__list">
             <li
                 v-for="item in srcItems"
@@ -19,18 +32,6 @@
                 />
             </li>
         </ul>
-        <div
-            v-if="loading"
-            class="loading"
-        >
-            Loading...
-        </div>
-        <div
-            v-if="!loading"
-            class="loading"
-        >
-            Not Loading...
-        </div>
     </section>
 </template>
 <script>

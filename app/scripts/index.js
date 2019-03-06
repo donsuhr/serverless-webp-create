@@ -24,6 +24,3 @@ new Vue({
     router,
     render: h => h(App, {}),
 });
-
-// book-transcode1@donsuhr.com
-// test

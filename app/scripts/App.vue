@@ -21,7 +21,6 @@
                 </RouterLink>
             </nav>
         </header>
-
         <RouterView />
     </main>
 </template>
