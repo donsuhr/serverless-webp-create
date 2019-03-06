@@ -36,6 +36,7 @@
 <script>
 import Base from './images/base';
 import Uploading from './images/uploading';
+import Deleting from './images/deleting';
 import Processing from './images/processing';
 import ProcessingPending from './images/processing-pending';
 
@@ -56,6 +57,9 @@ export default {
         mode(item) {
             if (item.uploading) {
                 return Uploading;
+            }
+            if (item.deleting) {
+                return Deleting;
             }
             if (item.logStoreItem && item.logStoreItem.transcoding) {
                 return Processing;
