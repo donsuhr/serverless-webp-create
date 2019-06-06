@@ -61,9 +61,14 @@ export default {
     },
     updated() {
         if (this.willOpen) {
-            this.$refs.twentytwenty.resize();
-            window.addEventListener('keyup', this.onEscapePressed);
-            this.willOpen = false;
+            this.$nextTick(() => {
+                this.$refs.twentytwenty.resize();
+                window.addEventListener('keyup', this.onEscapePressed);
+                this.willOpen = false;
+                setTimeout(() => {
+                    this.$refs.twentytwenty.resize();
+                }, 300);
+            });
         }
     },
     destroyed() {
