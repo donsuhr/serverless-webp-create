@@ -1,5 +1,5 @@
 import config from 'config';
-import EventEmitter from 'events';
+import EventEmitter from 'events'; // eslint-disable-line import/no-extraneous-dependencies
 import auth0 from 'auth0-js';
 import jwtDecode from 'jwt-decode';
 import { parseJSON, checkStatus } from 'fetch-json-helpers';

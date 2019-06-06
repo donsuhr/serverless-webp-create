@@ -1,5 +1,5 @@
 import config from 'config';
-import EventEmitter from 'events';
+import EventEmitter from 'events'; // eslint-disable-line import/no-extraneous-dependencies
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';

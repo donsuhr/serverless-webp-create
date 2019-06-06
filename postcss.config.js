@@ -1,3 +1,5 @@
+'use strict';
+
 const cssnanno = require('cssnano'); // eslint-disable-line import/no-extraneous-dependencies
 
 const plugins = [
