@@ -5,7 +5,7 @@ service: webp-create--bucket
 custom:
     get-firebase-token-service-name: webp-create--get-firebase-token
     bucket-name: ${self:provider.stage}-${self:service}--img-upload-2
-    jwtVenderLayer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:layer:WebpCreateVendorJwt:5
+    jwtVenderLayer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:layer:WebpCreateVendorJwt:6
     apigwBinary:
         types:
             - 'multipart/form-data'
