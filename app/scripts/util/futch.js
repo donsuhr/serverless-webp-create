@@ -7,7 +7,7 @@ export default function futch(url, opts = {}, onProgress) {
         for (const k in opts.headers || {}) {
             xhr.setRequestHeader(k, opts.headers[k]);
         }
-        xhr.onload = e => resolve(e.target.responseText);
+        xhr.onload = (e) => resolve(e.target.responseText);
         xhr.onerror = reject;
         if (xhr.upload && onProgress) {
             xhr.upload.onprogress = onProgress;

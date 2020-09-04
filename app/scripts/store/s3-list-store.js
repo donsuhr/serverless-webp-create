@@ -48,7 +48,7 @@ function create() {
             },
             setUploadProgress(state, data) {
                 const { Key, progress } = data;
-                const index = state.srcItems.findIndex(x => x.Key === Key);
+                const index = state.srcItems.findIndex((x) => x.Key === Key);
                 if (index !== -1) {
                     const newItem = {
                         ...state.srcItems[index],
@@ -63,7 +63,7 @@ function create() {
             },
             setUploadState(state, data) {
                 const { Key, uploading, processPending } = data;
-                const index = state.srcItems.findIndex(x => x.Key === Key);
+                const index = state.srcItems.findIndex((x) => x.Key === Key);
                 if (index !== -1) {
                     const newItem = {
                         ...state.srcItems[index],
@@ -78,7 +78,7 @@ function create() {
                 }
             },
             setProcessingData(state, data) {
-                const index = state.srcItems.findIndex(x => x.Key === data.Key);
+                const index = state.srcItems.findIndex((x) => x.Key === data.Key);
                 if (index !== -1) {
                     const currentItem = state.srcItems[index];
                     const newItem = {
@@ -121,7 +121,7 @@ function create() {
 
             setItemUploading(state, newItem) {
                 const index = state.srcItems.findIndex(
-                    x => x.Key === newItem.Key,
+                    (x) => x.Key === newItem.Key,
                 );
                 if (index !== -1) {
                     state.srcItems = [
@@ -136,14 +136,14 @@ function create() {
                 }
             },
             deletedItem(state, key) {
-                const index = state.srcItems.findIndex(x => x.Key === key);
+                const index = state.srcItems.findIndex((x) => x.Key === key);
                 state.srcItems = [
                     ...state.srcItems.slice(0, index),
                     ...state.srcItems.slice(index + 1),
                 ];
             },
             deletingItem(state, key) {
-                const index = state.srcItems.findIndex(x => x.Key === key);
+                const index = state.srcItems.findIndex((x) => x.Key === key);
                 if (index !== -1) {
                     const newItem = {
                         ...state.srcItems[index],
@@ -157,7 +157,7 @@ function create() {
                 }
             },
             updatingItem(state, { key, data }) {
-                const index = state.srcItems.findIndex(x => x.Key === key);
+                const index = state.srcItems.findIndex((x) => x.Key === key);
                 if (index !== -1) {
                     const Metadata = Object.keys(data).reduce((acc, x) => {
                         acc[x] = String(data[x]);
@@ -189,7 +189,7 @@ function create() {
                 })
                     .then(checkStatus)
                     .then(parseJSON);
-                const filtered = data.items.filter(x =>
+                const filtered = data.items.filter((x) =>
                     x.Key.startsWith('src/'));
                 const sorted = filtered.sort(sortByKey);
                 const mapped = sorted.map((x) => {
@@ -202,9 +202,9 @@ function create() {
                         ...x,
                         logStoreItem: rootGetters['log/itemByKey'](x.Key),
                         optimised: data.items.find(
-                            y => y.Key === optKey && y.Key.endsWith(ext),
+                            (y) => y.Key === optKey && y.Key.endsWith(ext),
                         ),
-                        webp: data.items.find(y => y.Key === webpKey),
+                        webp: data.items.find((y) => y.Key === webpKey),
                     };
                 });
                 commit('setSrcItems', mapped);
@@ -215,7 +215,7 @@ function create() {
                 commit, state, rooState, rootGetters,
             }, file) {
                 const newKey = `src/${file.name}`;
-                const item = state.srcItems.find(x => x.Key === newKey);
+                const item = state.srcItems.find((x) => x.Key === newKey);
                 const newItem = {
                     ...defaultItemProps,
                     ...item,
@@ -307,9 +307,9 @@ function create() {
             },
         },
         getters: {
-            loading: state => state.loading,
-            srcItems: state => state.srcItems,
-            itemByKey: state => Key => state.srcItems.find(x => x.Key === Key),
+            loading: (state) => state.loading,
+            srcItems: (state) => state.srcItems,
+            itemByKey: (state) => (Key) => state.srcItems.find((x) => x.Key === Key),
         },
     };
 }

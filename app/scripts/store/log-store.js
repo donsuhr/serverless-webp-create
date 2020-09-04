@@ -10,7 +10,7 @@ function create({ authService, db, imagesStoreKey }) {
                 state.loading = loading;
             },
             childAddOrChange(state, data) {
-                const index = state.items.findIndex(x => x.Key === data.Key);
+                const index = state.items.findIndex((x) => x.Key === data.Key);
                 if (index !== -1) {
                     const newItem = {
                         ...data,
@@ -25,7 +25,7 @@ function create({ authService, db, imagesStoreKey }) {
                 }
             },
             childRemoved(state, data) {
-                const index = state.items.findIndex(x => x.Key === data.Key);
+                const index = state.items.findIndex((x) => x.Key === data.Key);
                 if (index !== -1) {
                     state.items = [
                         ...state.items.slice(0, index),
@@ -46,9 +46,9 @@ function create({ authService, db, imagesStoreKey }) {
             },
         },
         getters: {
-            loading: state => state.loading,
-            items: state => state.items,
-            itemByKey: state => Key => state.items.find(x => x.Key === Key),
+            loading: (state) => state.loading,
+            items: (state) => state.items,
+            itemByKey: (state) => (Key) => state.items.find((x) => x.Key === Key),
         },
     };
 }

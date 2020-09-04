@@ -29,7 +29,7 @@ function create() {
             },
         },
         getters: {
-            zoom: state => state.zoom,
+            zoom: (state) => state.zoom,
         },
     };
 }

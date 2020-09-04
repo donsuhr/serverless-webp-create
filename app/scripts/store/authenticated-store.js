@@ -44,13 +44,13 @@ function createAuthenticatedStore({ authService }) {
             },
         },
         getters: {
-            auth0Loading: state => state.auth0Loading,
-            isAuth0Auth: state => state.isAuth0Auth,
-            isFbAuth: state => state.isFbAuth,
-            fbKeyLoading: state => state.fbKeyLoading,
-            loading: state =>
+            auth0Loading: (state) => state.auth0Loading,
+            isAuth0Auth: (state) => state.isAuth0Auth,
+            isFbAuth: (state) => state.isFbAuth,
+            fbKeyLoading: (state) => state.fbKeyLoading,
+            loading: (state) =>
                 state.auth0Loading || state.fbAuthLoading || state.fbKeyLoading,
-            isAuth: state => !!state.isFbAuth && !!state.isAuth0Auth,
+            isAuth: (state) => !!state.isFbAuth && !!state.isAuth0Auth,
         },
     };
 }
