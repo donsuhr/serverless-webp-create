@@ -35,14 +35,14 @@
     </section>
 </template>
 <script>
-import Base from './images/base';
-import Uploading from './images/uploading';
-import Deleting from './images/deleting';
-import Processing from './images/processing';
-import ProcessingPending from './images/processing-pending';
+import BaseImageItem from './ImageItemTypes/BaseImageItem';
+import UploadingImageItem from './ImageItemTypes/UploadingImageItem';
+import DeletingImageItem from './ImageItemTypes/DeletingImageItem';
+import ProcessingImageItem from './ImageItemTypes/ProcessingImageItem';
+import ProcessingPendingImageItem from './ImageItemTypes/ProcessingPendingImageItem';
 
 export default {
-    name: 'Images',
+    name: 'ImageListSection',
     computed: {
         loading() {
             return this.$store.getters['images/loading'];
@@ -57,18 +57,18 @@ export default {
     methods: {
         mode(item) {
             if (item.uploading) {
-                return Uploading;
+                return UploadingImageItem;
             }
             if (item.deleting) {
-                return Deleting;
+                return DeletingImageItem;
             }
             if (item.logStoreItem && item.logStoreItem.transcoding) {
-                return Processing;
+                return ProcessingImageItem;
             }
             if (item.processPending) {
-                return ProcessingPending;
+                return ProcessingPendingImageItem;
             }
-            return Base;
+            return BaseImageItem;
         },
         props(mode, item) {
             const transform = {

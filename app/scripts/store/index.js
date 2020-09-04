@@ -4,7 +4,7 @@ import { createAuthenticatedStore, addListeners } from './authenticated-store';
 import {
     create as createLogStore,
     addListeners as addLogListeners,
-} from './log-store';
+} from './firebase-log-store';
 import { create as createImagesStore } from './s3-list-store';
 import { create as createUiStore } from './ui-store';
 

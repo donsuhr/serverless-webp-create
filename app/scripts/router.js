@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from './pages/Login';
-import LoginCallback from './pages/LoginCallback';
-import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import LoginCallbackPage from './pages/LoginCallbackPage';
+import HomePage from './pages/HomePage';
 
 Vue.use(Router);
 
@@ -13,12 +13,12 @@ export default function createRouter({ authService }) {
             {
                 path: '/',
                 name: 'home',
-                component: Home,
+                component: HomePage,
             },
             {
                 path: '/login',
                 name: 'login',
-                component: Login,
+                component: LoginPage,
                 props: {
                     authService,
                 },
@@ -26,7 +26,7 @@ export default function createRouter({ authService }) {
             {
                 path: '/callback',
                 name: 'login-callback',
-                component: LoginCallback,
+                component: LoginCallbackPage,
                 props: {
                     authService,
                 },

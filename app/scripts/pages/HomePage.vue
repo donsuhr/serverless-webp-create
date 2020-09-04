@@ -8,23 +8,23 @@
         </p>
         <div v-if="authenticated">
             Logged In
-            <Log />
-            <Images />
-            <Zoomer />
+            <firebase-log />
+            <image-list-section />
+            <image-compare />
         </div>
     </section>
 </template>
 <script>
-import Log from '../components/Log';
-import Images from '../components/Images';
-import Zoomer from '../components/Zoomer';
+import FirebaseLog from '../components/FirebaseLog';
+import ImageListSection from '../components/ImageListSection';
+import ImageCompare from '../components/ImageCompare';
 
 export default {
-    name: 'Home',
+    name: 'HomePage',
     components: {
-        Log,
-        Images,
-        Zoomer,
+        FirebaseLog,
+        ImageListSection,
+        ImageCompare,
     },
     computed: {
         authenticated() {

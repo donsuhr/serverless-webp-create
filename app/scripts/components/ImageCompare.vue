@@ -28,7 +28,7 @@ import 'vue-twentytwenty/dist/vue-twentytwenty.css';
 import TwentyTwenty from 'vue-twentytwenty';
 
 export default {
-    name: 'Zoomer',
+    name: 'ImageCompare',
     components: {
         TwentyTwenty,
     },

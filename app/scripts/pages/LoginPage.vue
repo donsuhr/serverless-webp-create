@@ -19,7 +19,7 @@
 </template>
 <script>
 export default {
-    name: 'Login',
+    name: 'LoginPage',
     props: {
         // eslint-disable-next-line vue/require-prop-types
         authService: {
