@@ -11,4 +11,5 @@ yarn-error.log
 wip.txt
 *.packaged.yml
 coverage
-serverless/test-img-dest
+.serverless
+/Session.vim

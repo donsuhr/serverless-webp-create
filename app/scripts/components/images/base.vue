@@ -134,7 +134,10 @@ export default {
         },
         formatDate(dateString) {
             const date = new Date(dateString);
-            return format(date, 'YYYY-MM-DD hh:mmA');
+            if (date instanceof Date && !Number.isNaN(Number(date))) {
+                return format(date, 'yyyy-MM-dd hh:mma');
+            }
+            return '';
         },
         formatBytes(bytes) {
             return bytes ? prettyBytes(bytes) : '';

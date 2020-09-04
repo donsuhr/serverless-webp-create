@@ -5,7 +5,7 @@ service: webp-create--bucket
 custom:
     get-firebase-token-service-name: webp-create--get-firebase-token
     bucket-name: ${self:provider.stage}-${self:service}--img-upload-2
-    jwtVenderLayer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:layer:WebpCreateVendorJwt:6
+    GetFirebaseTokenLayer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:layer:WebpCreateGetFirebaseToken:1
     apigwBinary:
         types:
             - 'multipart/form-data'
@@ -16,7 +16,7 @@ plugins:
 
 provider:
     name: aws
-    runtime: nodejs8.10
+    runtime: nodejs12.x
 
     stage: dev
     region: us-west-2
@@ -41,20 +41,37 @@ provider:
 
 layers:
     WebpCreateVendorImagemin:
-        path: ../lambda-layer--vendor--imagemin--aws
+        path: ../lambda-layers/imagemin
         compatibleRuntimes:
-            - nodejs8.10
+            - nodejs12.x
         licenseInfo: GPLv3
         allowedAccounts:
             - '*'
+        package:
+            exclude: 
+                - bin/**
+                - Dockerfile
+                
+    WebpCreateCwebp:
+        path: ../lambda-layers/libwebp
+        compatibleRuntimes:
+            - nodejs12.x
+        licenseInfo: GPLv3
+        allowedAccounts:
+            - '*'
+        package:
+            exclude: 
+                - build-cache/**
+                - bin/**
+                - Dockerfile
 
 functions:
     DeleteImage:
-        handler: deleteImage.handler
+        handler: handlers/DeleteImage.handler
         timeout: 8
         memorySize: 128
         layers:
-            - ${self:custom.jwtVenderLayer}
+            - ${self:custom.GetFirebaseTokenLayer}
         events:
             - http:
                   path: images/{key}
@@ -77,23 +94,24 @@ functions:
                           - Debug
         environment:
             BUCKET: ${self:custom.bucket-name}
-            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
             DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
 
     ResizeImage:
-        handler: resizeImage.handler
+        handler: handlers/ResizeImage.handler
         timeout: 15
         memorySize: 1024
         layers:
             - { Ref: WebpCreateVendorImageminLambdaLayer }
-            - ${self:custom.jwtVenderLayer}
+            - { Ref: WebpCreateCwebpLambdaLayer }
+            - ${self:custom.GetFirebaseTokenLayer}
         environment:
             BUCKET: ${self:custom.bucket-name}
-            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
             DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
+            DEBUG: '*'
+            LIBWEBP_PATH: '/opt/libwebp-1.1.0/bin'
 
     ListImages:
-        handler: listImages.handler
+        handler: handlers/ListImages.handler
         timeout: 3
         memorySize: 128
         events:
@@ -105,7 +123,7 @@ functions:
             BUCKET: ${self:custom.bucket-name}
 
     PostImage:
-        handler: postImage.handler
+        handler: handlers/PostImage.handler
         events:
             - http:
                   path: images
@@ -123,12 +141,12 @@ functions:
                           - Pragma
                           - Debug
         layers:
-            - ${self:custom.jwtVenderLayer}
+            - ${self:custom.GetFirebaseTokenLayer}
         environment:
             BUCKET: ${self:custom.bucket-name}
 
     UpdateImageMetadata:
-        handler: updateImageMeta.handler
+        handler: handlers/UpdateImageMetadata.handler
         events:
             - http:
                   path: images/{key}
@@ -150,7 +168,7 @@ functions:
                           - Pragma
                           - Debug
         layers:
-            - ${self:custom.jwtVenderLayer}
+            - ${self:custom.GetFirebaseTokenLayer}
         environment:
             BUCKET: ${self:custom.bucket-name}
 

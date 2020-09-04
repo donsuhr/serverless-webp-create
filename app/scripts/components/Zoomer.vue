@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import 'vue-twentytwenty/dist/vue-twentytwenty.css';
 import TwentyTwenty from 'vue-twentytwenty';
 
 export default {

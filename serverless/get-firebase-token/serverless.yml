@@ -1,28 +1,26 @@
-# aws kms encrypt --key-id alias/dskey --output text --plaintext fileb://video-transcoder-776cd-9964a6a1cc5d.json | base64 --decode > video-transcoder-776cd-9964a6a1cc5d.encrypted.json
-
 service: webp-create--get-firebase-token
 
 provider:
     name: aws
-    runtime: nodejs8.10
+    runtime: nodejs12.x
 
     stage: dev
     region: us-west-2
 
 layers:
-    WebpCreateVendorJwt:
-        path: ../lambda-layer--vendor--jwt
+    WebpCreateGetFirebaseToken:
+        path: layers/GetFirebaseToken
         compatibleRuntimes:
-            - nodejs8.10
+            - nodejs12.x
         licenseInfo: GPLv3
         allowedAccounts:
             - '*'
 
 functions:
-    getFirebaseToken:
-        handler: index.handler
+    GetFirebaseToken:
+        handler: handlers/index.handler
         layers:
-            - { Ref: WebpCreateVendorJwtLambdaLayer }
+            - { Ref: WebpCreateGetFirebaseTokenLambdaLayer}
         events:
             - http:
                   path: firebaseToken
@@ -30,7 +28,6 @@ functions:
                   cors: true
         environment:
             AUTH0_DOMAIN: cmc.auth0.com
-            SERVICE_ACCOUNT: video-transcoder-776cd-9964a6a1cc5d.encrypted.json
             DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
 
 resources:

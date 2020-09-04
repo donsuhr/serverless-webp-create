@@ -1,14 +1,16 @@
 {
-    "extends": [
-        "plugin:vue/recommended"
-    ],
+    "extends": ["plugin:vue/recommended"],
     "parserOptions": {
         "parser": "babel-eslint",
         "sourceType": "module",
         "allowImportExportEverywhere": true
     },
     "settings": {
-        "import/resolver": "webpack"
+        "import/resolver": {
+            "webpack": {
+                "config": "config/webpack.config.js"
+            }
+        }
     },
     "env": {
         "browser": true,
@@ -23,12 +25,16 @@
                 "vue": "never"
             }
         ],
-        "vue/html-indent": ["error", 4, {
-            "attribute": 1,
-            "closeBracket": 0,
-            "alignAttributesVertically": true,
-            "ignores": []
-        }],
+        "vue/html-indent": [
+            "error",
+            4,
+            {
+                "attribute": 1,
+                "closeBracket": 0,
+                "alignAttributesVertically": true,
+                "ignores": []
+            }
+        ],
         "implicit-arrow-linebreak": "off"
     }
 }
