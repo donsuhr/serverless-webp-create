@@ -11,8 +11,10 @@ docker run --rm \
     --env NODE_PATH="$NODE_PATH" \
     --volume "$__dirname/../":/var/task:ro,delegated \
     --volume "$__dirname/../../lambda-layers/imagemin/nodejs":/opt/nodejs:ro,delegated \
-    --volume "$__dirname/../../get-firebase-token/layers/GetFirebaseToken/nodejs":/opt/get-firbase-token-layer/nodejs:ro,delegated \
+    --volume "$__dirname/../../get-firebase-token/layers/GetFirebaseToken/nodejs":/opt/get-firebase-token-layer/nodejs:ro,delegated \
     --volume "$__dirname/../../lambda-layers/libwebp":/opt/libwebp:ro,delegated \
+    --volume "$__dirname/../../../foo/libavif":/opt/libavif \
     lambci/lambda:build-nodejs12.x \
     bash
+    # --volume "$__dirname/../../lambda-layers/libavif":/opt/libavif:ro,delegated \
 

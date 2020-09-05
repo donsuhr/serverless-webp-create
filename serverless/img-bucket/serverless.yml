@@ -14,6 +14,12 @@ plugins:
     - serverless-pseudo-parameters
     - serverless-apigw-binary
 
+package:
+    exclude:
+        - .eslintrc.js
+        - bin/**
+        - test/**
+
 provider:
     name: aws
     runtime: nodejs12.x
@@ -64,6 +70,19 @@ layers:
                 - build-cache/**
                 - bin/**
                 - Dockerfile
+                  
+    WebpCreateLibavif:
+        path: ../lambda-layers/libavif
+        compatibleRuntimes:
+            - nodejs12.x
+        licenseInfo: GPLv3
+        allowedAccounts:
+            - '*'
+        package:
+            exclude: 
+                - build-cache/**
+                - bin/**
+                - Dockerfile
 
 functions:
     DeleteImage:
@@ -103,12 +122,14 @@ functions:
         layers:
             - { Ref: WebpCreateVendorImageminLambdaLayer }
             - { Ref: WebpCreateCwebpLambdaLayer }
+            - { Ref: WebpCreateLibavifLambdaLayer }
             - ${self:custom.GetFirebaseTokenLayer}
         environment:
             BUCKET: ${self:custom.bucket-name}
             DATABASE_URL: https://video-transcoder-776cd.firebaseio.com/
             DEBUG: '*'
             LIBWEBP_PATH: '/opt/libwebp-1.1.0/bin'
+            LIBAVIF_PATH: '/opt/libavif-0.8.1'
 
     ListImages:
         handler: handlers/ListImages.handler

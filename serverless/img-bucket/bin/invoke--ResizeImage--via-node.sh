@@ -19,4 +19,5 @@ NODE_PATH="$NODE_PATH" \
     DATABASE_URL="https://video-transcoder-776cd.firebaseio.com/" \
     DEBUG="ResizeImage:*,-ResizeImage:event" \
     LIBWEBP_PATH="/Users/bill/Downloads/libwebp-1.1.0-mac-10.15/bin" \
+    LIBAVIF_PATH="/Users/bill/Desktop/libavif/build" \
     node "$__dirname/../lib/invoke--ResizeImage--via-node.js"

@@ -6,7 +6,6 @@
 FROM lambci/lambda:build-nodejs12.x as build-stage
 
 ARG CACHE_DIR=/var/task/build-cache
-ARG TARGET_DIR=/opt/libwebp-${CWEBP_VERSION}
 ARG PKG_CONFIG_PATH="PKG_CONFIG_PATH=${CACHE_DIR}/lib/pkgconfig"
 ARG LDFLAGS="LDFLAGS=-L${CACHE_DIR}/lib"
 ARG CPPFLAGS="CPPFLAGS=-I${CACHE_DIR}/include"

@@ -15,6 +15,7 @@ const imageminJpegtran = require('imagemin-jpegtran');
 const imageminSvgo = require('imagemin-svgo');
 
 const fsWriteFile = util.promisify(fs.writeFile);
+const execFile = util.promisify(childProcess.execFile);
 const debugEvent = debug('ResizeImage:event');
 const debugUpload = debug('ResizeImage:upload');
 
@@ -26,8 +27,6 @@ const s3 = new AWS.S3();
 
 let firebaseApp;
 
-const webpOptionWhitelist = ['q', 'lossless'];
-
 function isLocalTest() {
     return process.env.LOCAL_TEST === '1';
 }
@@ -36,36 +35,6 @@ function getKeyFromEvent(event) {
     return decodeURIComponent(
         event.Records[0].s3.object.key.replace(/\+/g, ' '),
     );
-}
-
-function processMetadata(metaData) {
-    const ret = {
-        ...metaData,
-    };
-    if (ret.strip) {
-        ret.strip = ret.strip === 'true';
-    }
-    if (ret.speed) {
-        ret.speed = parseInt(ret.speed, 10);
-    }
-    if (ret.progressive) {
-        ret.progressive = ret.progressive === 'true';
-    }
-    if (ret.optimizationlevel) {
-        // lowercase L
-        ret.optimizationLevel = parseInt(ret.optimizationlevel, 10);
-        delete ret.optimizationlevel;
-    }
-    if (ret.interlaced) {
-        ret.interlaced = ret.interlaced === 'true';
-    }
-    if (ret.q) {
-        ret.q = parseInt(ret.q, 10);
-    }
-    if (ret.lossless) {
-        ret.lossless = ret.lossless === 'true';
-    }
-    return ret;
 }
 
 function getS3ObjectHead(Key) {
@@ -129,6 +98,9 @@ function writeToS3(key, buffer) {
         case '.svg':
             ContentType = 'image/svg+xml';
             break;
+        case '.avif':
+            ContentType = 'image/avif';
+            break;
         default:
             ContentType = 'application/octet-stream';
     }
@@ -149,22 +121,59 @@ function writeToS3(key, buffer) {
 }
 
 function processImagemin(buffer, metadata) {
+    // '.png': ['pngSpeed', 'strip', 'pngQ', 'pngLossless'],
+    // '.jpg': ['progressive', 'jpgQ', 'jpgLossless'],
+    // '.gif': ['interlaced', 'optimizationLevel', 'gifQ', 'gifLossless'],
+    // all metadata on s3 is lowercase
+    const options = {
+        png: {
+            ...(metadata.strip && { strip: metadata.strip === 'true' }),
+            ...(metadata.pngspeed && {
+                speed: parseInt(metadata.pngspeed, 10),
+            }),
+            ...(metadata.pngq && { q: parseInt(metadata.pngq, 10) }),
+            ...(metadata.pnglossless && {
+                lossless: metadata.pnglossless === 'true',
+            }),
+        },
+        jpg: {
+            ...(metadata.progressive && {
+                progressive: metadata.progressive === 'true',
+            }),
+            ...(metadata.jpgq && { q: parseInt(metadata.jpgq, 10) }),
+            ...(metadata.jpglossless && {
+                lossless: metadata.jpglossless === 'true',
+            }),
+        },
+        gif: {
+            ...(metadata.interlaced && {
+                interlaced: metadata.interlaced === 'true',
+            }),
+            ...(metadata.optimizationlevel && {
+                optimizationLevel: parseInt(metadata.optimizationlevel, 10),
+            }),
+            ...(metadata.gifq && { q: parseInt(metadata.gifq, 10) }),
+            ...(metadata.giflossless && {
+                lossless: metadata.giflossless === 'true',
+            }),
+        },
+        svg: {},
+    };
+
+    debugUpload('Start create imagemin. options:', options);
     return imagemin.buffer(buffer, {
         plugins: [
-            imageminPngquant(metadata),
-            imageminGifsicle(metadata),
-            imageminJpegtran(metadata),
-            imageminSvgo(metadata),
+            imageminPngquant(options.png),
+            imageminGifsicle(options.gif),
+            imageminJpegtran(options.jpg),
+            imageminSvgo(options.svg),
         ],
     });
 }
 async function imageminStream(stream, metadata) {
-    const pt = new PassThrough();
-    stream.pipe(pt);
-
     const chunks = [];
     // eslint-disable-next-line no-restricted-syntax
-    for await (const chunk of pt) {
+    for await (const chunk of stream) {
         chunks.push(chunk);
     }
     const buffer = Buffer.concat(chunks);
@@ -174,23 +183,18 @@ async function imageminStream(stream, metadata) {
 function createWebP(key, stream, metadata) {
     const ext = path.extname(key).toLowerCase();
 
-    const options = Object.keys(metadata).reduce(
-        (acc, x) => {
-            if (webpOptionWhitelist.includes(x)) {
-                if (x === 'lossless' && !!metadata.lossless && ext === '.gif') {
-                    acc.unshift('-lossy');
-                } else if (typeof metadata[x] === 'boolean') {
-                    if (metadata[x]) {
-                        acc.unshift(`-${x}`);
-                    }
-                } else {
-                    acc.unshift(`-${x}`, metadata[x]);
-                }
-            }
-            return acc;
-        },
-        ['-o', '-', '--', '-'],
-    );
+    const options = ['-o', '-', '--', '-'];
+
+    if (metadata.webpq) {
+        options.unshift('-q', parseInt(metadata.webpq, 10));
+    }
+
+    if (ext === '.gif' && metadata.webplossless !== 'true') {
+        options.unshift('-lossy');
+    }
+    if (ext !== '.gif' && metadata.webplossless === 'true') {
+        options.unshift('-lossless');
+    }
 
     const binFile = ext === '.gif' ? 'gif2webp' : 'cwebp';
     const bin = `${process.env.LIBWEBP_PATH}/${binFile}`;
@@ -208,21 +212,47 @@ function writeFileStreamPromise(stream, filename) {
     });
 }
 
-function writeWebP(key, stream) {
+async function createAvif(key, stream, metadata) {
+    const ext = key.split('.').pop();
+    const inFilePath = `/tmp/avif-in.${ext}`;
+    const outFilePath = '/tmp/avif-out.avif';
+
+    const options = [inFilePath, outFilePath];
+    if (metadata.avifspeed) {
+        options.unshift('--speed', parseInt(metadata.avifspeed, 10));
+    }
+    if (metadata.aviflossless) {
+        options.unshift('--lossless');
+    }
+
+    const pt = new PassThrough();
+    stream.pipe(pt);
+    await writeFileStreamPromise(pt, inFilePath);
+    const bin = `${process.env.LIBAVIF_PATH}/avifenc`;
+    debugUpload('Start create avif. binary:', bin, 'options:', options);
+
+    await execFile(bin, options);
+    return fs.createReadStream(outFilePath);
+}
+
+function writeOutStream(key, newExt, stream) {
     const ext = path.extname(key).toLowerCase();
     const filename = path.resolve(
         __dirname,
-        key.replace(ext, '.webp').replace('src/', '../test/out/'),
+        key.replace(ext, newExt).replace('src/', '../test/out/'),
     );
+    const writeFilePassthough = new PassThrough();
     const filePromise = isLocalTest()
-        ? writeFileStreamPromise(stream, filename)
+        ? writeFileStreamPromise(writeFilePassthough, filename)
         : Promise.resolve();
 
-    const s3Key = key.replace(ext, '.webp').replace('src/', 'optimised/');
+    const s3Key = key.replace(ext, newExt).replace('src/', 'optimized/');
     const uploadPassthough = new PassThrough();
     const uploadPromise = writeToS3(s3Key, uploadPassthough);
     stream.pipe(uploadPassthough);
-
+    if (isLocalTest()) {
+        stream.pipe(writeFilePassthough);
+    }
     return Promise.all([uploadPromise, filePromise]);
 }
 
@@ -235,7 +265,7 @@ function writeImagemin(key, buffer) {
         ? fsWriteFile(filename, buffer)
         : Promise.resolve();
 
-    const s3key = key.replace('src/', 'optimised/');
+    const s3key = key.replace('src/', 'optimized/');
     const uploadPromise = writeToS3(s3key, buffer);
 
     return Promise.all([uploadPromise, filePromise]);
@@ -245,36 +275,64 @@ async function processEvent(event, context) {
     const key = getKeyFromEvent(event);
     await writeToFirebase(key, true);
     const { Metadata } = await getS3ObjectHead(key);
-    const metadata = processMetadata(Metadata);
-    debugUpload('metadata:', metadata);
+    debugUpload('s3 Metadata:', Metadata);
 
     // const data = await getImageBuffer(key);
     const imgStream = getImageStream(key);
 
     const ext = path.extname(key);
-    let webpStream;
     let webpUpload;
     let webpDataLength = 0;
+
     if (ext === '.svg') {
-        webpStream = Promise.resolve();
         webpUpload = Promise.resolve();
     } else {
-        webpStream = createWebP(key, imgStream, metadata);
-        webpUpload = writeWebP(key, webpStream);
+        const webpPt = new PassThrough();
+        imgStream.pipe(webpPt);
+        const webpStream = createWebP(key, webpPt, Metadata);
+        webpUpload = writeOutStream(key, '.webp', webpStream);
         webpStream.on('data', (chunk) => {
             webpDataLength += chunk.length;
         });
     }
 
-    const imageminBuffer = await imageminStream(imgStream, metadata);
-    const imageminUpload = writeImagemin(key, imageminBuffer);
+    let avifUpload;
+    let avifDataLength = 0;
+    if (ext === '.png' || ext === '.jpg') {
+        const avifPt = new PassThrough();
+        imgStream.pipe(avifPt);
+        avifUpload = createAvif(key, avifPt, Metadata).then((avifStream) => {
+            const upload = writeOutStream(key, '.avif', avifStream);
 
-    await Promise.all([webpUpload, imageminUpload]).then(async () => {
-        await writeToFirebase(key, false, {
-            webpFileSize: webpDataLength,
-            optimisedFileSize: imageminBuffer.byteLength,
+            avifStream.on('data', (chunk) => {
+                avifDataLength += chunk.length;
+            });
+            return upload;
         });
-    });
+    } else {
+        avifUpload = Promise.resolve();
+    }
+
+    let imageminFileSize = 0;
+
+    const imageminPt = new PassThrough();
+    imgStream.pipe(imageminPt);
+    const imageminUpload = imageminStream(imgStream, Metadata).then(
+        (imageminBuffer) => {
+            imageminFileSize = imageminBuffer.byteLength;
+            return writeImagemin(key, imageminBuffer);
+        },
+    );
+
+    await Promise.all([webpUpload, imageminUpload, avifUpload]).then(
+        async () => {
+            await writeToFirebase(key, false, {
+                webpFileSize: webpDataLength,
+                imageminFileSize,
+                avifFileSize: avifDataLength,
+            });
+        },
+    );
 }
 
 function decryptServiceAccount() {

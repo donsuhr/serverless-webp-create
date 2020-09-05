@@ -27,7 +27,7 @@ const s3 = new AWS.S3();
 
 function deleteS3Objects(Key) {
     const t0 = performance.now();
-    const optKey = Key.replace('src/', 'optimised/');
+    const optKey = Key.replace('src/', 'optimized/');
     const params = {
         Delete: {
             Quiet: false,

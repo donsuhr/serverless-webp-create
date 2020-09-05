@@ -23,10 +23,33 @@ if (!isLocalTest()) {
 
 const s3 = new AWS.S3();
 
+const avifWhitelist = ['avifSpeed', 'avifLossless'];
+const webpWhitelist = ['webpQ', 'webpLossless'];
+
 const paramWhiteList = {
-    '.png': ['speed', 'strip', 'q', 'lossless'],
-    '.jpg': ['progressive', 'q', 'lossless'],
-    '.gif': ['interlaced', 'optimizationLevel', 'q', 'lossless'],
+    '.png': [
+        'pngSpeed',
+        'strip',
+        'pngQ',
+        'pngLossless',
+        ...webpWhitelist,
+        ...avifWhitelist,
+    ],
+    '.jpg': [
+        'progressive',
+        'jpgQ',
+        'jpgLossless',
+        ...webpWhitelist,
+        ...avifWhitelist,
+    ],
+    '.gif': [
+        'interlaced',
+        'optimizationLevel',
+        'gifQ',
+        'gifLossless',
+        ...webpWhitelist,
+    ],
+    '.svg': [],
 };
 
 function getS3ObjectHead(Key) {
