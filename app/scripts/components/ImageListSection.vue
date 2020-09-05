@@ -76,6 +76,7 @@ export default {
                 logStoreItem: 'logStoreItem',
                 optimized: 'optimized',
                 webp: 'webp',
+                avif: 'avif',
                 uploading: 'uploading',
                 imgData: 'data',
                 upProgress: 'progress',

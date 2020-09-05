@@ -19,8 +19,24 @@ const defaultItemProps = {
 };
 
 function correctHeaderCase(headObj) {
+    // .png : ['pngSpeed', 'strip', 'pngQ', 'pngLossless'],
+    // .jpg : ['progressive', 'jpgQ', 'jpgLossless'],
+    // .gif : ['interlaced', 'optimizationLevel', 'gifQ', 'gifLossless'],
+    // .avif: ['avifSpeed', 'avifLossless'];
+    // .webp: ['webpQ', 'webpLossless'];
     const correctCase = {
         optimizationlevel: 'optimizationLevel',
+        pngspeed: 'pngSpeed',
+        pngq: 'pngQ',
+        pnglossless: 'pngLossless',
+        jpgq: 'jpgQ',
+        jpglossless: 'jpgLossless',
+        gifq: 'gifQ',
+        giflossless: 'gifLossless',
+        avifspeed: 'avifSpeed',
+        avifLossless: 'avifLossless',
+        webpq: 'webpQ',
+        webplossless: 'webpLossless',
     };
     return Object.keys(headObj).reduce((acc, x) => {
         if (Object.hasOwnProperty.call(correctCase, x)) {
@@ -104,6 +120,11 @@ function create() {
                     if (!newItem?.webp) {
                         newItem.webp = {
                             Key: optKey.replace(ext, '.webp'),
+                        };
+                    }
+                    if (!newItem?.avif) {
+                        newItem.avif = {
+                            Key: optKey.replace(ext, '.avif'),
                         };
                     }
                     if (!data.transcoding) {
@@ -196,6 +217,7 @@ function create() {
                     const optKey = x.Key.replace('src/', 'optimized/');
                     const ext = x.Key.substring(x.Key.lastIndexOf('.'));
                     const webpKey = optKey.replace(ext, '.webp');
+                    const avifKey = optKey.replace(ext, '.avif');
                     x.head.Metadata = correctHeaderCase(x.head.Metadata);
                     return {
                         ...defaultItemProps,
@@ -205,6 +227,7 @@ function create() {
                             (y) => y.Key === optKey && y.Key.endsWith(ext),
                         ),
                         webp: data.items.find((y) => y.Key === webpKey),
+                        avif: data.items.find((y) => y.Key === avifKey),
                     };
                 });
                 commit('setSrcItems', mapped);

@@ -9,14 +9,6 @@
                 :src="generateImgUrl(s3Key)"
             >
         </div>
-        <div class="images__list-item__info">
-            <div v-if="logStoreItem">
-                <p>updated: {{ formatDate(logStoreItem.updatedAt) }}</p>
-                <p v-if="logStoreItem.error">
-                    {{ logStoreItem.error }}
-                </p>
-            </div>
-        </div>
         <div
             class="images__img-item"
             @click.prevent="onOptClick"
@@ -35,6 +27,7 @@
         </div>
 
         <div
+            v-if="shouldHaveWebP"
             class="images__img-item"
             @click.prevent="onWebpClick"
         >
@@ -50,10 +43,35 @@
                 src="img/mag.svg"
             >
         </div>
+        <div
+            v-if="shouldHaveAvif"
+            class="images__img-item"
+            @click.prevent="onAvifClick"
+        >
+            <p class="images__img-item__title">
+                Avif: ({{ formatBytes(avif.Size) }})
+            </p>
+            <img
+                class="images__list-item__img--avif"
+                :src="generateImgUrl(avif.Key)"
+            >
+            <img
+                class="images__img-zoom-btn__img"
+                src="img/mag.svg"
+            >
+        </div>
+        <div class="images__list-item__info">
+            <div v-if="logStoreItem">
+                <p>updated: {{ formatDate(logStoreItem.updatedAt) }}</p>
+                <p v-if="logStoreItem.error">
+                    {{ logStoreItem.error }}
+                </p>
+            </div>
+        </div>
         <div class="images__form-wrapper">
             <metadata-form
                 :s3-key="s3Key"
-                v-bind="metadata"
+                :metadata="metadata"
             />
             <button
                 type="button"
@@ -106,6 +124,13 @@ export default {
                 Size: 0,
             }),
         },
+        avif: {
+            type: Object,
+            default: () => ({
+                Key: '',
+                Size: 0,
+            }),
+        },
         didProcess: {
             type: Boolean,
             default: false,
@@ -114,6 +139,17 @@ export default {
             type: Object,
             required: false,
             default: () => ({}),
+        },
+    },
+    computed: {
+        shouldHaveWebP() {
+            const ext = this.s3Key.split('.').pop();
+            return ext !== 'svg';
+        },
+        shouldHaveAvif() {
+            const ext = this.s3Key.split('.').pop();
+            const whitelist = ['jpg', 'png'];
+            return whitelist.includes(ext);
         },
     },
     created() {
@@ -159,6 +195,11 @@ export default {
                 afterLabel: 'Optimized',
             });
         },
+        onAvifClick() {
+            this.$store.dispatch('ui/updateZoom', {
+                beforeUrl: this.generateImgUrl(this.s3Key),
+                compareImgUrl: this.generateImgUrl(this.avif.Key),
+                afterLabel: 'Optimized',
             });
         },
     },
