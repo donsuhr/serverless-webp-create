@@ -91,25 +91,25 @@ function create() {
                     }
                     const optKey = currentItem.Key.replace(
                         'src/',
-                        'optimised/',
+                        'optimized/',
                     );
                     const ext = currentItem.Key.substring(
                         currentItem.Key.lastIndexOf('.'),
                     );
-                    const webpKey = optKey.replace(ext, '.webp');
-                    if (!Object.hasOwnProperty.call(newItem, 'optimised')) {
-                        newItem.optimised = {
+                    if (!newItem?.optimized) {
+                        newItem.optimized = {
                             Key: optKey,
                         };
                     }
-                    if (!Object.hasOwnProperty.call(newItem, 'webp')) {
+                    if (!newItem?.webp) {
                         newItem.webp = {
-                            Key: webpKey,
+                            Key: optKey.replace(ext, '.webp'),
                         };
                     }
                     if (!data.transcoding) {
-                        newItem.optimised.Size = data.optimisedFileSize;
+                        newItem.optimized.Size = data.imageminFileSize;
                         newItem.webp.Size = data.webpFileSize;
+                        newItem.avif.Size = data.avifFileSize;
                     }
                     state.srcItems = [
                         ...state.srcItems.slice(0, index),
@@ -193,7 +193,7 @@ function create() {
                     x.Key.startsWith('src/'));
                 const sorted = filtered.sort(sortByKey);
                 const mapped = sorted.map((x) => {
-                    const optKey = x.Key.replace('src/', 'optimised/');
+                    const optKey = x.Key.replace('src/', 'optimized/');
                     const ext = x.Key.substring(x.Key.lastIndexOf('.'));
                     const webpKey = optKey.replace(ext, '.webp');
                     x.head.Metadata = correctHeaderCase(x.head.Metadata);
@@ -201,7 +201,7 @@ function create() {
                         ...defaultItemProps,
                         ...x,
                         logStoreItem: rootGetters['log/itemByKey'](x.Key),
-                        optimised: data.items.find(
+                        optimized: data.items.find(
                             (y) => y.Key === optKey && y.Key.endsWith(ext),
                         ),
                         webp: data.items.find((y) => y.Key === webpKey),

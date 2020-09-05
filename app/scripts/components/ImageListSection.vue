@@ -74,7 +74,7 @@ export default {
             const transform = {
                 s3Key: 'Key',
                 logStoreItem: 'logStoreItem',
-                optimised: 'optimised',
+                optimized: 'optimized',
                 webp: 'webp',
                 uploading: 'uploading',
                 imgData: 'data',

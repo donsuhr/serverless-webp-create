@@ -22,11 +22,11 @@
             @click.prevent="onOptClick"
         >
             <p class="images__img-item__title">
-                Optimised: ({{ formatBytes(optimised.Size) }})
+                Optimized: ({{ formatBytes(optimized.Size) }})
             </p>
             <img
                 class="images__list-item__img--opt"
-                :src="generateImgUrl(optimised.Key)"
+                :src="generateImgUrl(optimized.Key)"
             >
             <img
                 class="images__img-zoom-btn__img"
@@ -39,7 +39,7 @@
             @click.prevent="onWebpClick"
         >
             <p class="images__img-item__title">
-                Webp: ({{ formatBytes(webp.Size) }})
+                WebP: ({{ formatBytes(webp.Size) }})
             </p>
             <img
                 class="images__list-item__img--webp"
@@ -51,7 +51,7 @@
             >
         </div>
         <div class="images__form-wrapper">
-            <MetaDataForm
+            <metadata-form
                 :s3-key="s3Key"
                 v-bind="metadata"
             />
@@ -69,12 +69,12 @@
 import config from 'config';
 import { format } from 'date-fns';
 import prettyBytes from 'pretty-bytes';
-import MetaDataForm from '../MetaDataForm';
+import MetadataForm from '../MetadataForm';
 
 export default {
     name: 'Base',
     components: {
-        MetaDataForm,
+        MetadataForm,
     },
     props: {
         size: {
@@ -92,7 +92,7 @@ export default {
                 Size: 0,
             }),
         },
-        optimised: {
+        optimized: {
             type: Object,
             default: () => ({
                 Key: '',
@@ -155,8 +155,10 @@ export default {
         onOptClick() {
             this.$store.dispatch('ui/updateZoom', {
                 beforeUrl: this.generateImgUrl(this.s3Key),
-                compareImgUrl: this.generateImgUrl(this.optimised.Key),
-                afterLabel: 'Optimised',
+                compareImgUrl: this.generateImgUrl(this.optimized.Key),
+                afterLabel: 'Optimized',
+            });
+        },
             });
         },
     },
