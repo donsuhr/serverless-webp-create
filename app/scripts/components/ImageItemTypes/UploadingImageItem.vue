@@ -10,10 +10,8 @@
             >
         </div>
         <div class="images__list-item__info">
-            <p>
-                Uploading
-            </p>
-            <p>progress:{{ upProgress }}</p>
+            <p>Uploading</p>
+            <p>upload: {{ percent }}</p>
         </div>
     </div>
 </template>
@@ -40,17 +38,19 @@ export default {
             type: Number,
         },
     },
+    computed: {
+        percent() {
+            const bytes = prettyBytes(this.size);
+            const percent = Math.round(this.upProgress * 100);
+            return `${percent}% of ${bytes}`;
+        },
+    },
     mounted() {
         this.$el.scrollIntoView({
             behavior: 'smooth',
             block: 'start',
             inline: 'nearest',
         });
-    },
-    methods: {
-        formatBytes(bytes) {
-            return bytes ? prettyBytes(bytes) : '';
-        },
     },
 };
 </script>
