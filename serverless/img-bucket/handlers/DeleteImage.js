@@ -44,6 +44,10 @@ function deleteS3Objects(Key) {
     };
     if (!Key.endsWith('.svg')) {
         const ext = path.extname(Key);
+        if (ext === '.jpg' || ext === '.png') {
+            const avifKey = optKey.replace(ext, '.avif');
+            params.Delete.Objects.push({ Key: avifKey });
+        }
         const webpKey = optKey.replace(ext, '.webp');
         params.Delete.Objects.push({ Key: webpKey });
     }
