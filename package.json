@@ -73,6 +73,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@syncfusion/ej2-vue-inputs": "^18.2.56",
     "auth0-js": "^9.10.4",
     "date-fns": "^2.16.1",
     "fetch-json-helpers": "git+ssh://git@bitbucket.org/zorg128/fetch-json-helpers.git",

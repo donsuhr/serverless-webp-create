@@ -22,7 +22,7 @@ function correctHeaderCase(headObj) {
     // .png : ['pngSpeed', 'strip', 'pngQ', 'pngLossless'],
     // .jpg : ['progressive', 'jpgQ', 'jpgLossless'],
     // .gif : ['interlaced', 'optimizationLevel', 'gifQ', 'gifLossless'],
-    // .avif: ['avifSpeed', 'avifLossless'];
+    // .avif: ['avifSpeed', 'avifLossless', 'avifMinQ', 'avifMaxQ'
     // .webp: ['webpQ', 'webpLossless'];
     const correctCase = {
         optimizationlevel: 'optimizationLevel',
@@ -35,6 +35,8 @@ function correctHeaderCase(headObj) {
         giflossless: 'gifLossless',
         avifspeed: 'avifSpeed',
         avifLossless: 'avifLossless',
+        avifminq: 'avifMinQ',
+        avifmaxq: 'avifMaxQ',
         webpq: 'webpQ',
         webplossless: 'webpLossless',
     };

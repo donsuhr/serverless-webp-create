@@ -23,7 +23,7 @@ if (!isLocalTest()) {
 
 const s3 = new AWS.S3();
 
-const avifWhitelist = ['avifSpeed', 'avifLossless'];
+const avifWhitelist = ['avifSpeed', 'avifLossless', 'avifMinQ', 'avifMaxQ'];
 const webpWhitelist = ['webpQ', 'webpLossless'];
 
 const paramWhiteList = {

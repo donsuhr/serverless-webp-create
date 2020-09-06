@@ -224,6 +224,16 @@ async function createAvif(key, stream, metadata) {
     if (metadata.aviflossless) {
         options.unshift('--lossless');
     }
+    if (metadata.avifmaxq) {
+        options.unshift('--max', metadata.avifmaxq);
+    } else {
+        options.unshift('--max', 63);
+    }
+    if (metadata.avifminq) {
+        options.unshift('--min', metadata.avifminq);
+    } else {
+        options.unshift('--min', 33);
+    }
 
     const pt = new PassThrough();
     stream.pipe(pt);
