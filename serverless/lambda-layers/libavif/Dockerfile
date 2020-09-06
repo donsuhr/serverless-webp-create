@@ -36,7 +36,7 @@ RUN eval "${PKG_CONFIG_PATH} LDFLAGS=-L${CACHE_DIR}/lib ${CPPFLAGS} ${CONFIGURE}
 RUN make
 RUN make install
 
-
+# https://www.reddit.com/r/AV1/comments/hdshcc/how_to_compile_avifenc_avifdec_and_avifdump_tools/
 WORKDIR /var/task
 RUN git clone --depth 1 --branch v0.8.1 https://github.com/AOMediaCodec/libavif.git
 WORKDIR /var/task/libavif
