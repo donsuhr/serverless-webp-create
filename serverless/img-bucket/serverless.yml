@@ -55,8 +55,9 @@ layers:
             - '*'
         package:
             exclude: 
-                - bin/**
-                - Dockerfile
+                - ./**
+            include: 
+                - nodejs/**
                 
     WebpCreateCwebp:
         path: ../lambda-layers/libwebp
@@ -67,9 +68,9 @@ layers:
             - '*'
         package:
             exclude: 
-                - build-cache/**
-                - bin/**
-                - Dockerfile
+                - ./**
+            include: 
+                - libwebp-1.1.0/**
                   
     WebpCreateLibavif:
         path: ../lambda-layers/libavif
@@ -79,10 +80,10 @@ layers:
         allowedAccounts:
             - '*'
         package:
-            exclude: 
-                - build-cache/**
-                - bin/**
-                - Dockerfile
+            exclude:
+                - ./**
+            include: 
+                - libavif-0.8.1/**
 
 functions:
     DeleteImage:
