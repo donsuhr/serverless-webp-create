@@ -13,7 +13,7 @@ docker run --rm \
     --volume "$__dirname/../../lambda-layers/imagemin/nodejs":/opt/nodejs:ro,delegated \
     --volume "$__dirname/../../get-firebase-token/layers/GetFirebaseToken/nodejs":/opt/get-firebase-token-layer/nodejs:ro,delegated \
     --volume "$__dirname/../../lambda-layers/libwebp":/opt/libwebp:ro,delegated \
-    --volume "$__dirname/../../../foo/libavif":/opt/libavif \
+    --volume "$__dirname/../../lambda-layers/libavif":/opt/libavif \
     lambci/lambda:build-nodejs12.x \
     bash
     # --volume "$__dirname/../../lambda-layers/libavif":/opt/libavif:ro,delegated \
