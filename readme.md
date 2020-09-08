@@ -58,9 +58,13 @@ Build: `serverless/lambda-layers/imagemin/bin/build.sh` Mess with it:
 
 It gets installed as part of `serverless/img-bucket/serverless.yml`
 
+### imagemin layer
+
+Same as libcwebp.
+
 ### pre-installed-for-dev
 
-I didn't want to include aws-sdk in my main package. The lambda functions need
+aws-sdk is not in the main package. The lambda functions need
 it when running `serverless invoke local`. `npm install` it before running
 invoke.
 
