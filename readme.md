@@ -58,7 +58,7 @@ Build: `serverless/lambda-layers/imagemin/bin/build.sh` Mess with it:
 
 It gets installed as part of `serverless/img-bucket/serverless.yml`
 
-### imagemin layer
+### libavif layer
 
 Same as libcwebp.
 
